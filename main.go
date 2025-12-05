@@ -17,7 +17,8 @@ func main() {
 	// day03_p2()
 	// day04()
 	// day04_p2()
-	day05()
+	// day05()
+	day05_p2()
 }
 
 func readLines(path string, split string) iter.Seq[string] {
