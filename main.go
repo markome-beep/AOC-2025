@@ -12,10 +12,12 @@ func main() {
 	// day01()
 	// day01_p2()
 	// day02()
-	day02_p2()
+	// day02_p2()
 	// day03()
 	// day03_p2()
 	// day04()
+	// day04_p2()
+	day05()
 }
 
 func readLines(path string, split string) iter.Seq[string] {
