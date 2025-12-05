@@ -9,7 +9,13 @@ import (
 )
 
 func main() {
-	day01()
+	// day01()
+	// day01_p2()
+	// day02()
+	day02_p2()
+	// day03()
+	// day03_p2()
+	// day04()
 }
 
 func readLines(path string, split string) iter.Seq[string] {
@@ -17,7 +23,6 @@ func readLines(path string, split string) iter.Seq[string] {
 	if err != nil {
 		fmt.Println("Error opening file: ", err)
 		return func(func(string) bool) {
-			return
 		}
 	}
 
