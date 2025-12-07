@@ -27,7 +27,7 @@ func day01() {
 
 		position %= 100
 		if position == 0 {
-			count += 1
+			count++
 		}
 	}
 	fmt.Println("Answer: ", count)
@@ -50,7 +50,9 @@ func day01_p2() {
 
 		switch line[0] {
 		case 'L':
-			if position == 0 { count --}
+			if position == 0 {
+				count--
+			}
 			position -= value
 		case 'R':
 			position += value
@@ -62,7 +64,7 @@ func day01_p2() {
 			count++
 		}
 
-		position = (position % 100 + 100) % 100
+		position = (position%100 + 100) % 100
 
 		fmt.Println("Position: ", position)
 		fmt.Println("Count: ", count)
