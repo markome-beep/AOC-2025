@@ -13,7 +13,7 @@ func makeChart(file string) [][]rune {
 		r = append(r, '.')
 		chart = append(chart, r)
 	}
-	padding :=make([]rune, len(chart[0]))
+	padding := make([]rune, len(chart[0]))
 	for i := range padding {
 		padding[i] = '.'
 	}
@@ -29,11 +29,11 @@ func day04() {
 	sum := 0
 
 	for x, row := range chart {
-		if x == 0 || x == len(chart) - 1 {
+		if x == 0 || x == len(chart)-1 {
 			continue
 		}
 		for y := range row {
-			if y == 0 || y == len(chart[x]) - 1 {
+			if y == 0 || y == len(chart[x])-1 {
 				continue
 			}
 
@@ -43,7 +43,7 @@ func day04() {
 			buddies := 0
 			for _, offset := range neighbors {
 				if chart[x+offset[0]][y+offset[1]] != '.' {
-					buddies ++
+					buddies++
 				}
 			}
 			if buddies < 4 {
@@ -64,11 +64,11 @@ func day04_p2() {
 	for found {
 		found = false
 		for x, row := range chart {
-			if x == 0 || x == len(chart) - 1 {
+			if x == 0 || x == len(chart)-1 {
 				continue
 			}
 			for y := range row {
-				if y == 0 || y == len(chart[x]) - 1 {
+				if y == 0 || y == len(chart[x])-1 {
 					continue
 				}
 
@@ -78,7 +78,7 @@ func day04_p2() {
 				buddies := 0
 				for _, offset := range neighbors {
 					if chart[x+offset[0]][y+offset[1]] != '.' {
-						buddies ++
+						buddies++
 					}
 				}
 				if buddies < 4 {
