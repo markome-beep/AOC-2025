@@ -1,4 +1,4 @@
-package main
+package day01
 
 import (
 	"fmt"
@@ -70,4 +70,9 @@ func day01_p2() {
 		fmt.Println("Count: ", count)
 	}
 	fmt.Println("Answer: ", count)
+}
+
+func main() {
+	day01()
+	day01_p2()
 }
