@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/markome-beep/AOC-2025/shared"
+)
 
 func maxi(r []int) (int, int) {
 	if len(r) == 0 {
@@ -18,9 +22,9 @@ func maxi(r []int) (int, int) {
 	return i, m
 }
 
-func day03() {
+func part_1() {
 	sum := 0
-	for line := range readLines("./inputs/day-03", "\n") {
+	for line := range shared.ReadLines("./inputs/day-03", "\n") {
 		nums := make([]int, len(line))
 		for i, char := range line {
 			nums[i] = int(char - '0')
@@ -32,23 +36,28 @@ func day03() {
 	fmt.Println(sum)
 }
 
-func day03_p2() {
+func part_2() {
 	sum := 0
-	for line := range readLines("./inputs/day-03", "\n") {
+	for line := range shared.ReadLines("./inputs/day-03", "\n") {
 		nums := make([]int, len(line))
 		for i, char := range line {
 			nums[i] = int(char - '0')
 		}
-		
+
 		var m, k int
 		j := 0
 		mul := 100_000_000_000
-		for i := range(12) {
-			k, m = maxi(nums[j:len(nums)-(11-i)])
+		for i := range 12 {
+			k, m = maxi(nums[j : len(nums)-(11-i)])
 			j += k + 1
 			sum += m * mul
 			mul /= 10
 		}
 	}
 	fmt.Println(sum)
+}
+
+func main() {
+	part_1()
+	part_2()
 }

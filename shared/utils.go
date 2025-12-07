@@ -1,4 +1,4 @@
-package main
+package shared
 
 import (
 	"bufio"
@@ -8,22 +8,7 @@ import (
 	"strings"
 )
 
-func main() {
-	// day01()
-	// day01_p2()
-	// day02()
-	// day02_p2()
-	// day03()
-	// day03_p2()
-	// day04()
-	// day04_p2()
-	// day05()
-	// day05_p2()
-	// day06()
-	day06_p2()
-}
-
-func readLines(path string, split string) iter.Seq[string] {
+func ReadLines(path string, split string) iter.Seq[string] {
 	file, err := os.Open(path)
 	if err != nil {
 		fmt.Println("Error opening file: ", err)

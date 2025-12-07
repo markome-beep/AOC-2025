@@ -1,14 +1,15 @@
-package day01
+package main
 
 import (
 	"fmt"
+	"github.com/markome-beep/AOC-2025/shared"
 	"strconv"
 )
 
-func day01() {
+func part_1() {
 	position := 50
 	count := 0
-	for line := range readLines("./inputs/day-01", "\n") {
+	for line := range shared.ReadLines("./inputs/day-01", "\n") {
 
 		value, err := strconv.Atoi(line[1:])
 		if err != nil {
@@ -33,10 +34,10 @@ func day01() {
 	fmt.Println("Answer: ", count)
 }
 
-func day01_p2() {
+func part_2() {
 	position := 50
 	count := 0
-	for line := range readLines("./inputs/day-01", "\n") {
+	for line := range shared.ReadLines("./inputs/day-01", "\n") {
 
 		value, err := strconv.Atoi(line[1:])
 		if err != nil {
@@ -66,13 +67,13 @@ func day01_p2() {
 
 		position = (position%100 + 100) % 100
 
-		fmt.Println("Position: ", position)
-		fmt.Println("Count: ", count)
+		// fmt.Println("Position: ", position)
+		// fmt.Println("Count: ", count)
 	}
 	fmt.Println("Answer: ", count)
 }
 
 func main() {
-	day01()
-	day01_p2()
+	part_1()
+	part_2()
 }

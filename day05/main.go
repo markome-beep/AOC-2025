@@ -5,10 +5,12 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+
+	"github.com/markome-beep/AOC-2025/shared"
 )
 
 type bucket struct {
-	left int
+	left  int
 	right int
 }
 
@@ -30,24 +32,24 @@ func parseDB(s string) []bucket {
 	return db
 }
 
-func day05()  {
+func part_1() {
 	var tmp []string
-	for part := range readLines("./inputs/day-05", "\n\n") {
+	for part := range shared.ReadLines("./inputs/day-05", "\n\n") {
 		tmp = append(tmp, part)
 	}
 
 	db := parseDB(tmp[0])
 	sum := 0
 
-	Val:
-	for _, val := range strings.Split(tmp[1], "\n") {
+Val:
+	for val := range strings.SplitSeq(tmp[1], "\n") {
 		num, err := strconv.Atoi(strings.TrimSpace(val))
 		if err != nil {
 			continue
 		}
 		for _, b := range db {
 			if b.left <= num && num <= b.right {
-				sum ++
+				sum++
 				continue Val
 			}
 		}
@@ -55,9 +57,9 @@ func day05()  {
 	fmt.Printf("sum: %v\n", sum)
 }
 
-func day05_p2()  {
+func part_2() {
 	var tmp []string
-	for part := range readLines("./inputs/day-05", "\n\n") {
+	for part := range shared.ReadLines("./inputs/day-05", "\n\n") {
 		tmp = append(tmp, part)
 	}
 
@@ -67,7 +69,7 @@ func day05_p2()  {
 	})
 	sum := 0
 
-	Bucket:
+Bucket:
 	for i, buck := range db {
 		for _, prev_buck := range db[:i] {
 			if buck.left > prev_buck.right {
@@ -76,7 +78,7 @@ func day05_p2()  {
 				continue
 			} else if buck.right > prev_buck.right {
 				buck.left = prev_buck.right + 1
-			} else if buck.left < prev_buck.left { 
+			} else if buck.left < prev_buck.left {
 				buck.right = prev_buck.left - 1
 			} else {
 				continue Bucket
@@ -85,4 +87,9 @@ func day05_p2()  {
 		sum += buck.right - buck.left + 1
 	}
 	fmt.Printf("sum: %v\n", sum)
+}
+
+func main() {
+	part_1()
+	part_2()
 }

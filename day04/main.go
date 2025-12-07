@@ -1,10 +1,14 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/markome-beep/AOC-2025/shared"
+)
 
 func makeChart(file string) [][]rune {
 	chart := make([][]rune, 0)
-	for row := range readLines(file, "\n") {
+	for row := range shared.ReadLines(file, "\n") {
 		r := make([]rune, len(row))
 		for i, char := range row {
 			r[i] = char
@@ -23,7 +27,7 @@ func makeChart(file string) [][]rune {
 	return chart
 }
 
-func day04() {
+func part_1() {
 	neighbors := [][]int{{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}}
 	chart := makeChart("./inputs/day-04")
 	sum := 0
@@ -55,7 +59,7 @@ func day04() {
 
 }
 
-func day04_p2() {
+func part_2() {
 	neighbors := [][]int{{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}}
 	chart := makeChart("./inputs/day-04")
 	sum := 0
@@ -89,4 +93,9 @@ func day04_p2() {
 		}
 	}
 	fmt.Printf("sum: %v\n", sum)
+}
+
+func main() {
+	part_1()
+	part_2()
 }

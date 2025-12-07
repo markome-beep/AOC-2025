@@ -5,12 +5,14 @@ import (
 	"math/big"
 	"strconv"
 	"strings"
+
+	"github.com/markome-beep/AOC-2025/shared"
 )
 
-func day06() {
+func part_1() {
 	input := make([][]string, 0)
 
-	for line := range readLines("./inputs/day-06", "\n") {
+	for line := range shared.ReadLines("./inputs/day-06", "\n") {
 		row := strings.Fields(line)
 		input = append(input, row)
 	}
@@ -54,10 +56,10 @@ func day06() {
 	fmt.Printf("total: %v\n", total)
 }
 
-func day06_p2() {
+func part_2() {
 	input := make([]string, 0)
 
-	for line := range readLines("./inputs/day-06", "\n") {
+	for line := range shared.ReadLines("./inputs/day-06", "\n") {
 		input = append(input, line)
 	}
 
@@ -111,4 +113,9 @@ func day06_p2() {
 	total += tmpTotal
 
 	fmt.Printf("total: %v\n", total)
+}
+
+func main() {
+	part_1()
+	part_2()
 }

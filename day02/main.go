@@ -5,6 +5,7 @@ import (
 	"iter"
 	"strconv"
 	"strings"
+	"github.com/markome-beep/AOC-2025/shared"
 )
 
 func doubleNums() iter.Seq[int] {
@@ -22,9 +23,9 @@ func doubleNums() iter.Seq[int] {
 	}
 }
 
-func day02() {
+func part_1() {
 	sum := 0
-	for r := range readLines("./inputs/day-02", ",") {
+	for r := range shared.ReadLines("./inputs/day-02", ",") {
 		r := strings.Split(r, "-")
 		left, err := strconv.Atoi(strings.TrimSpace(r[0]))
 		if err != nil {
@@ -44,12 +45,12 @@ func day02() {
 			}
 		}
 	}
-	fmt.Println(sum)
+	fmt.Printf("sum: %v\n", sum)
 }
 
-func day02_p2() {
+func part_2() {
 	sum := 0
-	for r := range readLines("./inputs/day-02", ",") {
+	for r := range shared.ReadLines("./inputs/day-02", ",") {
 		r := strings.Split(r, "-")
 		left, err := strconv.Atoi(strings.TrimSpace(r[0]))
 		if err != nil {
@@ -81,5 +82,10 @@ func day02_p2() {
 			}
 		}
 	}
-	fmt.Println(sum)
+	fmt.Printf("sum: %v\n", sum)
+}
+
+func main() {
+	part_1()
+	part_2()
 }
