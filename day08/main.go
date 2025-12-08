@@ -78,10 +78,11 @@ func part_1(file string, pairs int) int {
 			continue
 		}
 
-		update := connected[dists[conn].p2.index]
+		update := max(connected[dists[conn].p2.index], connected[dists[conn].p1.index])
+		circuit := min(connected[dists[conn].p2.index], connected[dists[conn].p1.index])
 		for i := range connected {
 			if connected[i] == update {
-				connected[i] = connected[dists[conn].p1.index]
+				connected[i] = circuit
 			}
 		}
 	}
@@ -111,10 +112,11 @@ Conn:
 			continue
 		}
 
-		update := connected[conn.p2.index]
+		update := max(connected[conn.p2.index], connected[conn.p1.index])
+		circuit := min(connected[conn.p2.index], connected[conn.p1.index])
 		for i := range connected {
 			if connected[i] == update {
-				connected[i] = connected[conn.p1.index]
+				connected[i] = circuit
 			}
 		}
 
@@ -132,7 +134,7 @@ Conn:
 }
 
 func main() {
-	fmt.Printf("part_1(\"./inputs/day-08\", 1000): %v\n", part_1("./inputs/day-08", 1000))
+	fmt.Printf("part_1: %v\n", part_1("./inputs/day-08", 1000))
 
-	fmt.Printf("part_2(\"./inputs/day-08\"): %v\n", part_2("./inputs/day-08"))
+	fmt.Printf("part_2: %v\n", part_2("./inputs/day-08"))
 }
