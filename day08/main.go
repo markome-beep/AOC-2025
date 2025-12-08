@@ -53,7 +53,8 @@ func parsePoints(file string) []point {
 }
 
 func distances(p []point) []pair {
-	vals := make([]pair, 0)
+	n := len(p)
+	vals := make([]pair, 0, (n*n-n)/2)
 	for i, p1 := range p {
 		for _, p2 := range p[i+1:] {
 			vals = append(vals, pair{p1, p2, p1.dist2(p2)})
