@@ -50,6 +50,7 @@ func part_2(file string) int {
 				if lasers[j] == 0 {
 					continue
 				}
+				timelines += lasers[j]
 				lasers[j-1] += lasers[j]
 				lasers[j+1] += lasers[j]
 				lasers[j] = 0
@@ -59,10 +60,6 @@ func part_2(file string) int {
 				fmt.Println("RIP")
 			}
 		}
-	}
-
-	for _, v := range lasers {
-		timelines += v
 	}
 
 	fmt.Printf("timelines: %v\n", timelines)
