@@ -35,7 +35,7 @@ func Test_part_2(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := part_2(tt.file)
+			got := part_2_bfs(tt.file)
 			// TODO: update the condition below to compare got with tt.want.
 			if got != tt.want {
 				t.Errorf("part_2() = %v, want %v", got, tt.want)
