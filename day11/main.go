@@ -1,7 +1,6 @@
 package main
 
 import (
-	// "fmt"
 	"fmt"
 	"strings"
 
@@ -16,64 +15,80 @@ func NewGraph(file string) *graph {
 		parts := strings.Split(line, ":")
 		g[parts[0]] = make([]string, 0)
 		for conn := range strings.SplitSeq(parts[1], " ") {
+			if conn == "" {
+				continue
+			}
 			g[parts[0]] = append(g[parts[0]], strings.TrimSpace(conn))
 		}
 	}
 	return &g
 }
 
-func Out(entry string, memo *map[string]int, g *graph) int {
-	if entry == "out" {
-		return 1
-	}
-	if val, ok := (*memo)[entry]; ok {
-		return val
+func memo[M comparable, T any](f func(func(M, T) int) func(M, T) int) func(M, T) int {
+	memo := map[M]int{}
+	var self func(M, T) int
+
+	self = func(m M, t T) int {
+		if val, ok := memo[m]; ok {
+			return val
+		}
+
+		memo[m] = f(self)(m, t)
+		return memo[m]
 	}
 
-	sum := 0
-	for _, e := range (*g)[entry] {
-		sum += Out(e, memo, g)
-	}
-
-	return sum
+	return self
 }
 
-func OutPlusVisit(entry string, memo *map[string]int, visited *map[string]bool, g *graph, memoOut *map[string]int) int {
-	if entry == "out" {
-		return 0
-	}
-
-	if val, ok := (*memo)[entry]; ok {
-		return val
-	}
-
-	(*visited)[entry] = true
-	defer delete(*visited, entry)
-
-	sum := 0
-	for _, e := range (*g)[entry] {
-		if (*visited)["fft"] && (*visited)["dac"] {
-			sum += Out(e, memoOut, g)
-		} else {
-			sum += OutPlusVisit(e, memo, visited, g, memoOut)
+func Out(self func(string, *graph) int) func(string, *graph) int {
+	return func(entry string, g *graph) int {
+		if entry == "out" {
+			return 1
 		}
-	}
 
-	return sum
+		sum := 0
+		for _, e := range (*g)[entry] {
+			sum += self(e, g)
+		}
+
+		return sum
+	}
+}
+
+type args struct {
+	entry string
+	fft   bool
+	dac   bool
+}
+
+func OutPlusVisit(self func(args, *graph) int) func(args, *graph) int {
+	return func(a args, g *graph) int {
+		if a.entry == "out" {
+			if a.fft && a.dac {
+				return 1
+			}
+			return 0
+		}
+
+		sum := 0
+		for _, e := range (*g)[a.entry] {
+				sum += self(args{e, a.fft || a.entry == "fft", a.dac || a.entry == "dac"}, g)
+		}
+
+		return sum
+	}
 }
 
 func part1(file string) int {
 	g := NewGraph(file)
-	memo := make(map[string]int)
-	return Out("you", &memo, g)
+	o := memo(Out)
+	return o("you", g)
 }
 
 func part2(file string) int {
 	g := NewGraph(file)
-	memo := make(map[string]int)
-	memoOut := make(map[string]int)
-
-	return OutPlusVisit("svr", &memo, &map[string]bool{}, g, &memoOut)
+	o := memo(OutPlusVisit)
+	return o(args{"svr", false, false}, g)
 }
 
 func main() {
