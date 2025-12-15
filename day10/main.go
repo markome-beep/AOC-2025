@@ -45,11 +45,12 @@ func part2(file string) uint {
 	results := make(chan uint, buff)
 	jobs := make(chan string, 200)
 
-	for _ = range buff {
+	for range buff {
 		go func() {
 			for line := range jobs {
 				m := NewMachine(line)
-				results <- m.Joltage_BFS()
+				// results <- m.Joltage_BFS()
+				results <- m.Joltage()
 				wg.Done()
 				atomic.AddInt32(&count, -1)
 			}

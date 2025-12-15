@@ -2,23 +2,16 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"strconv"
 	"strings"
 )
 
 type Machine struct {
-	LightTarget uint
-	// JoltageTargetKey string
+	LightTarget   uint
 	JoltageTarget []uint
 	Buttons       []uint
-	// LightPath        map[uint]uint
-	// JoltagePath      map[string]JoltageNode
 }
-
-// type JoltageNode struct {
-// 	dist uint
-// 	val []uint
-// }
 
 func NewMachine(line string) *Machine {
 	parts := strings.Split(line, " ")
@@ -54,20 +47,10 @@ func NewMachine(line string) *Machine {
 		}
 	}
 
-	// lightPath := make(map[uint]uint)
-	// lightPath[0] = 0
-
-	// joltagePath := make(map[string]JoltageNode)
-	// start := make([]uint, len(joltageTarget))
-	// key := fmt.Sprintf("%v", start)
-	// joltagePath[key] = JoltageNode{0, start}
-
 	return &Machine{lightTarget, joltageTarget, buttons}
-	// return &Machine{lightTarget, fmt.Sprintf("%v", joltageTarget), joltageTarget, buttons, lightPath, joltagePath}
 }
 
 func (m *Machine) Indicator() uint {
-
 	LightPath := make(map[uint]uint)
 	LightPath[0] = 0
 
@@ -88,11 +71,31 @@ func (m *Machine) Indicator() uint {
 			}
 		}
 	}
+
 	return 0
 }
 
-func (m *Machine) Joltage_BFS() uint {
+func (m *Machine) allIndicators() map[uint][]uint {
+	LightPaths := make(map[uint][]uint)
+	LightPaths[0] = make([]uint, 0)
 
+	for i := range uint(1 << len(m.Buttons)) {
+		var pos uint = 0
+		for p := 0; p < len(m.Buttons); p++ {
+			if i&(1<<p) > 0 {
+				pos = pos ^ m.Buttons[p]
+			}
+		}
+		if LightPaths[pos] == nil {
+			LightPaths[pos] = make([]uint, 0)
+		}
+		LightPaths[pos] = append(LightPaths[pos], i)
+	}
+
+	return LightPaths
+}
+
+func (m *Machine) Joltage_BFS() uint {
 	start := make([]uint, len(m.JoltageTarget))
 	key := fmt.Sprintf("%v", start)
 
@@ -140,15 +143,96 @@ func (m *Machine) Joltage_BFS() uint {
 	return 0
 }
 
-func (m *Machine) Joltage_MAT() uint {
-	return 0
+func (m *Machine) Joltage() uint {
+	all_i := m.allIndicators()
+	var target func([]uint, string) uint
+
+	step := func(u []uint, mov uint) ([]uint, error) {
+		uc := make([]uint, len(u))
+		copy(uc, u)
+
+		for p := 0; p < len(m.Buttons); p++ {
+			if mov&(1<<p) > 0 {
+				for i := range u {
+					if (1<<i)&m.Buttons[p] > 0 {
+						if uc[i] == 0 {
+							return nil, fmt.Errorf("Overflow")
+						}
+						uc[i] -= 1
+					}
+				}
+			}
+		}
+
+		for i := range uc {
+			uc[i] /= 2
+		}
+		return uc, nil
+	}
+
+	target = func(u []uint, prefix string) uint {
+		fmt.Println(prefix, "┌─> ", u)
+		defer fmt.Println(prefix, "└─> ", u)
+		var pos uint = 0
+		all_zeros := true
+		for i, val := range u {
+			if val%2 == 1 {
+				pos |= 1 << i
+			}
+			if val != 0 {
+				all_zeros = false
+			}
+		}
+
+		if all_zeros {
+			fmt.Println(prefix, "returned 0")
+			return 0
+		}
+
+		if combos, ok := all_i[pos]; ok {
+			var m uint = math.MaxUint - 1000
+			for _, c := range combos {
+				s, err := step(u, c)
+				if err != nil {
+					continue
+				}
+				fmt.Println(prefix, "pressed: ", littleEndian(c))
+
+				var btn_presses uint = 0
+				for c > 0 {
+					c = c & (c - 1)
+					btn_presses++
+				}
+
+				m = min(m, target(s, prefix+" │")*2+btn_presses)
+			}
+
+			fmt.Println(prefix, "returned ", m)
+			var mu uint = 0
+			for _, uv := range u {
+				mu = max(uv, mu)	
+			}
+			if m < mu {
+				fmt.Println(prefix, "PANICKING ", m)
+				panic("Shit")	
+			}
+			return m
+		}
+
+		fmt.Println(prefix, "returned max")
+		return math.MaxUint - 1000
+	}
+
+	val := target(m.JoltageTarget, "")
+	fmt.Printf("val: %v\n", val)
+	return val
 }
 
 func debugTravel(t map[uint]uint) {
 	var str strings.Builder
 	str.WriteString("map[")
 	for pos, dist := range t {
-		str.WriteString(littleEndian(uint64(pos)))
+		str.WriteString(littleEndian(pos))
 		str.WriteRune(':')
 		str.WriteString(fmt.Sprint(dist))
 		str.WriteRune(' ')
@@ -157,7 +241,7 @@ func debugTravel(t map[uint]uint) {
 	fmt.Println(str.String())
 }
 
-func littleEndian(n uint64) string {
+func littleEndian(n uint) string {
 	var sb strings.Builder
 
 	for i := 0; n>>i > 0; i++ {
