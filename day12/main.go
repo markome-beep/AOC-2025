@@ -69,14 +69,20 @@ func part1(file string) int {
 	for _, t := range ts {
 		total_area := t.shape[0] * t.shape[1]
 		acc_area := 0
+		total_presents := 0
 		for i, pc := range t.present_count {
 			acc_area += ps[i].hash_count * pc
+			total_presents += pc
 		}
-		if acc_area <= total_area {
+		if acc_area > total_area {
+			continue
+		}
+		if  total_presents*9 <= total_area {
 			count ++
+			continue
 		}
+		panic("Solution Not Trivial")
 	}
-
 
 	return count
 }
