@@ -145,7 +145,7 @@ func (m *Machine) Joltage_BFS() uint {
 
 func (m *Machine) Joltage() uint {
 	all_i := m.allIndicators()
-	var target func([]uint, string) uint
+	var target func([]uint) uint
 
 	step := func(u []uint, mov uint) ([]uint, error) {
 		uc := make([]uint, len(u))
@@ -170,9 +170,7 @@ func (m *Machine) Joltage() uint {
 		return uc, nil
 	}
 
-	target = func(u []uint, prefix string) uint {
-		fmt.Println(prefix, "┌─> ", u)
-		defer fmt.Println(prefix, "└─> ", u)
+	target = func(u []uint) uint {
 		var pos uint = 0
 		all_zeros := true
 		for i, val := range u {
@@ -185,7 +183,6 @@ func (m *Machine) Joltage() uint {
 		}
 
 		if all_zeros {
-			fmt.Println(prefix, "returned 0")
 			return 0
 		}
 
@@ -196,7 +193,6 @@ func (m *Machine) Joltage() uint {
 				if err != nil {
 					continue
 				}
-				fmt.Println(prefix, "pressed: ", littleEndian(c))
 
 				var btn_presses uint = 0
 				for c > 0 {
@@ -204,68 +200,19 @@ func (m *Machine) Joltage() uint {
 					btn_presses++
 				}
 
-				m = min(m, target(s, prefix+" │")*2+btn_presses)
+				m = min(m, target(s)*2+btn_presses)
 			}
 
-			fmt.Println(prefix, "returned ", m)
 			var mu uint = 0
 			for _, uv := range u {
 				mu = max(uv, mu)	
 			}
-			if m < mu {
-				fmt.Println(prefix, "PANICKING ", m)
-				panic("Shit")	
-			}
 			return m
 		}
 
-		fmt.Println(prefix, "returned max")
 		return math.MaxUint - 1000
 	}
 
-	val := target(m.JoltageTarget, "")
-	fmt.Printf("val: %v\n", val)
+	val := target(m.JoltageTarget)
 	return val
-}
-
-func debugTravel(t map[uint]uint) {
-	var str strings.Builder
-	str.WriteString("map[")
-	for pos, dist := range t {
-		str.WriteString(littleEndian(pos))
-		str.WriteRune(':')
-		str.WriteString(fmt.Sprint(dist))
-		str.WriteRune(' ')
-	}
-	str.WriteRune(']')
-	fmt.Println(str.String())
-}
-
-func littleEndian(n uint) string {
-	var sb strings.Builder
-
-	for i := 0; n>>i > 0; i++ {
-		if (n>>i)&1 == 1 {
-			sb.WriteByte('1')
-		} else {
-			sb.WriteByte('0')
-		}
-	}
-	return sb.String()
-}
-
-func (m *Machine) String() string {
-	// var str strings.Builder
-	// str.WriteRune('{')
-	// str.WriteString(littleEndian(uint64(m.LightTarget)))
-	// str.WriteString(" [")
-	// for i, btn := range m.Buttons {
-	// 	if i != 0 {
-	// 		str.WriteRune(' ')
-	// 	}
-	// 	str.WriteString(littleEndian(uint64(btn)))
-	// }
-	// str.WriteString("]}")
-	// return str.String()
-	return fmt.Sprintf("%v", m.JoltageTarget)
 }

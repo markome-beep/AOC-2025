@@ -30,13 +30,13 @@ func Test_part2(t *testing.T) {
 		file string
 		want uint
 	}{
-		// {"Example", "../inputs/day-10-test", 33},
+		{"Example", "../inputs/day-10-test", 33},
 		{"Example-1-row", "../inputs/day-10-test-2", 10},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got := part2(tt.file)
-			if true {
+			if got != tt.want {
 				t.Errorf("part2() = %v, want %v", got, tt.want)
 			}
 		})
